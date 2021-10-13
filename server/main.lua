@@ -1,50 +1,50 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qbr-core']:GetCoreObject()
 
-RegisterServerEvent('qb-multicharacter:server:disconnect')
-AddEventHandler('qb-multicharacter:server:disconnect', function()
+RegisterServerEvent('qbr-multicharacter:server:disconnect')
+AddEventHandler('qbr-multicharacter:server:disconnect', function()
     local src = source
     DropPlayer(src, "You have disconnected from QBCore RedM")
 end)
 
-RegisterServerEvent('qb-multicharacter:server:loadUserData')
-AddEventHandler('qb-multicharacter:server:loadUserData', function(cData)
+RegisterServerEvent('qbr-multicharacter:server:loadUserData')
+AddEventHandler('qbr-multicharacter:server:loadUserData', function(cData)
     local src = source
     if QBCore.Player.Login(src, cData.citizenid) then
-        print('^2[qb-core]^7 '..GetPlayerName(src)..' (Citizen ID: '..cData.citizenid..') has succesfully loaded!')
+        print('^2[qbr-core]^7 '..GetPlayerName(src)..' (Citizen ID: '..cData.citizenid..') has succesfully loaded!')
         QBCore.Commands.Refresh(src)
 
-        TriggerClientEvent("qb-multicharacter:client:closeNUI", src)
-        TriggerClientEvent('qb-spawn:client:setupSpawnUI', src, cData, false)
-        TriggerEvent("qb-log:server:CreateLog", "joinleave", "Loaded", "green", "**".. GetPlayerName(src) .. "** ("..cData.citizenid.." | "..src..") loaded..")
+        TriggerClientEvent("qbr-multicharacter:client:closeNUI", src)
+        TriggerClientEvent('qbr-spawn:client:setupSpawnUI', src, cData, false)
+        TriggerEvent("qbr-log:server:CreateLog", "joinleave", "Loaded", "green", "**".. GetPlayerName(src) .. "** ("..cData.citizenid.." | "..src..") loaded..")
 	end
 end)
 
-RegisterServerEvent('qb-multicharacter:server:createCharacter')
-AddEventHandler('qb-multicharacter:server:createCharacter', function(data, enabledhouses)
+RegisterServerEvent('qbr-multicharacter:server:createCharacter')
+AddEventHandler('qbr-multicharacter:server:createCharacter', function(data, enabledhouses)
     local src = source
     local newData = {}
     newData.cid = data.cid
     newData.charinfo = data
     if QBCore.Player.Login(src, false, newData) then
-        print('^2[qb-core]^7 '..GetPlayerName(src)..' has succesfully loaded!')
+        print('^2[qbr-core]^7 '..GetPlayerName(src)..' has succesfully loaded!')
         QBCore.Commands.Refresh(src)
         --[[if enabledhouses then
             loadHouseData()
         end]]
 
-        TriggerClientEvent("qb-multicharacter:client:closeNUI", src)
-        --TriggerClientEvent('qb-spawn:client:setupSpawnUI', src, newData, true)
+        TriggerClientEvent("qbr-multicharacter:client:closeNUI", src)
+        --TriggerClientEvent('qbr-spawn:client:setupSpawnUI', src, newData, true)
         --GiveStarterItems(src)
 	end
 end)
 
-RegisterServerEvent('qb-multicharacter:server:deleteCharacter')
-AddEventHandler('qb-multicharacter:server:deleteCharacter', function(citizenid)
+RegisterServerEvent('qbr-multicharacter:server:deleteCharacter')
+AddEventHandler('qbr-multicharacter:server:deleteCharacter', function(citizenid)
     local src = source
     QBCore.Player.DeleteCharacter(src, citizenid)
 end)
 
-QBCore.Functions.CreateCallback('qb-multicharacter:server:getSkin', function(source, cb, citizenid)
+QBCore.Functions.CreateCallback('qbr-multicharacter:server:getSkin', function(source, cb, citizenid)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local result = exports.oxmysql:executeSync('SELECT * FROM playerskins WHERE citizenid=@citizenid', {['@citizenid'] = citizenid})
@@ -57,7 +57,7 @@ QBCore.Functions.CreateCallback('qb-multicharacter:server:getSkin', function(sou
 end)
 
 
-QBCore.Functions.CreateCallback("qb-multicharacter:server:loadUserInfo", function(source, cb)
+QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", function(source, cb)
     local license = QBCore.Functions.GetIdentifier(source, 'license')
     local plyChars = {}
 
@@ -75,7 +75,7 @@ end)
 
 QBCore.Commands.Add("logout", "Logout of Character (Admin Only)", {}, false, function(source, args)
     QBCore.Player.Logout(source)
-    TriggerClientEvent('qb-multicharacter:client:chooseChar', source)
+    TriggerClientEvent('qbr-multicharacter:client:chooseChar', source)
 end, "admin")
 
 function GiveStarterItems(source)
@@ -114,6 +114,6 @@ function loadHouseData()
             }
         end
     end
-    TriggerClientEvent("qb-garages:client:houseGarageConfig", -1, HouseGarages)
-    TriggerClientEvent("qb-houses:client:setHouseConfig", -1, Houses)
+    TriggerClientEvent("qbr-garages:client:houseGarageConfig", -1, HouseGarages)
+    TriggerClientEvent("qbr-houses:client:setHouseConfig", -1, Houses)
 end

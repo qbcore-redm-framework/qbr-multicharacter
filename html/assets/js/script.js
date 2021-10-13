@@ -40,7 +40,7 @@ $(document).ready(function (){
                 }, 500);
             
                 setTimeout(function(){
-                    $.post('https://qb-multicharacter/setupCharacters');
+                    $.post('https://qbr-multicharacter/setupCharacters');
                     setTimeout(function(){
                         clearInterval(DotsInterval);
                         loadingProgress = 0;
@@ -48,7 +48,7 @@ $(document).ready(function (){
                         $(".welcomescreen").fadeOut(150);
                         qbMultiCharacters.fadeInDown('.character-info', '20%', 400);
                         qbMultiCharacters.fadeInDown('.characters-list', '10%', 400);
-                        $.post('https://qb-multicharacter/removeBlur');
+                        $.post('https://qbr-multicharacter/removeBlur');
                     }, 2000);
                 }, 2000);
             } else {
@@ -77,15 +77,15 @@ $('.continue-btn').click(function(e){
     // setTimeout(function(){
     //     qbMultiCharacters.fadeInDown('.characters-list', '20%', 400);
     //     qbMultiCharacters.fadeInDown('.character-info', '20%', 400);
-    //     $.post('https://qb-multicharacter/setupCharacters');
+    //     $.post('https://qbr-multicharacter/setupCharacters');
     // }, 400)
 });
 
 $('.disconnect-btn').click(function(e){
     e.preventDefault();
 
-    $.post('https://qb-multicharacter/closeUI');
-    $.post('https://qb-multicharacter/disconnectButton');
+    $.post('https://qbr-multicharacter/closeUI');
+    $.post('https://qbr-multicharacter/disconnectButton');
 });
 
 function setupCharInfo(cData) {
@@ -140,7 +140,7 @@ $(document).on('click', '.character', function(e) {
             $("#delete").css({"display":"none"});
             $("#deleteButton1").css({"display":"none"});
 
-            $.post('https://qb-multicharacter/cDataPed', JSON.stringify({
+            $.post('https://qbr-multicharacter/cDataPed', JSON.stringify({
                 cData: cDataPed
             }));
         } else {
@@ -152,7 +152,7 @@ $(document).on('click', '.character', function(e) {
             $("#delete").css({"display":"block"});
             $("#deleteButton1").css({"display":"block"});
 
-            $.post('https://qb-multicharacter/cDataPed', JSON.stringify({
+            $.post('https://qbr-multicharacter/cDataPed', JSON.stringify({
                 cData: cDataPed
             }));
         }
@@ -167,7 +167,7 @@ $(document).on('click', '.character', function(e) {
             $("#delete").css({"display":"none"});
             $("#deleteButton1").css({"display":"none"});
 
-            $.post('https://qb-multicharacter/cDataPed', JSON.stringify({
+            $.post('https://qbr-multicharacter/cDataPed', JSON.stringify({
                 cData: cDataPed
             }));
         } else {
@@ -179,7 +179,7 @@ $(document).on('click', '.character', function(e) {
             $("#delete").css({"display":"block"});
             $("#deleteButton1").css({"display":"block"});
 
-            $.post('https://qb-multicharacter/cDataPed', JSON.stringify({
+            $.post('https://qbr-multicharacter/cDataPed', JSON.stringify({
                 cData: cDataPed
             }));
         }
@@ -220,7 +220,7 @@ $(document).on('click', '#create', function (e) {
     if (!firstname || !lastname || !nationality || !birthdate || hasWhiteSpace(firstname) || hasWhiteSpace(lastname)|| hasWhiteSpace(nationality) ){
     console.log("FIELDS REQUIRED")
     }else{
-        $.post('https://qb-multicharacter/createNewCharacter', JSON.stringify({
+        $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
             firstname: firstname,
             lastname: lastname,
             nationality: nationality,
@@ -237,7 +237,7 @@ $(document).on('click', '#create', function (e) {
 });
 // $(document).on('click', '#create', function(e){
 //     e.preventDefault();
-//     $.post('https://qb-multicharacter/createNewCharacter', JSON.stringify({
+//     $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
 //         firstname: $('#first_name').val(),
 //         lastname: $('#last_name').val(),
 //         nationality: $('#nationality').val(),
@@ -253,7 +253,7 @@ $(document).on('click', '#create', function (e) {
 // });
 
 $(document).on('click', '#accept-delete', function(e){
-    $.post('https://qb-multicharacter/removeCharacter', JSON.stringify({
+    $.post('https://qbr-multicharacter/removeCharacter', JSON.stringify({
         citizenid: $(selectedChar).data("citizenid"),
     }));
     $('.character-delete').fadeOut(150);
@@ -266,7 +266,7 @@ function refreshCharacters() {
     setTimeout(function(){
         $(selectedChar).removeClass("char-selected");
         selectedChar = null;
-        $.post('https://qb-multicharacter/setupCharacters');
+        $.post('https://qbr-multicharacter/setupCharacters');
         $("#delete").css({"display":"none"});
         $("#play").css({"display":"none"});
         qbMultiCharacters.resetAll();
@@ -292,7 +292,7 @@ $(document).on('click', '#play', function(e) {
 
     if (selectedChar !== null) {
         if (charData !== "") {
-            $.post('https://qb-multicharacter/selectCharacter', JSON.stringify({
+            $.post('https://qbr-multicharacter/selectCharacter', JSON.stringify({
                 cData: $(selectedChar).data('cData')
             }));
             // qbMultiCharacters.fadeInDown('.welcomescreen', WelcomePercentage, 400);
