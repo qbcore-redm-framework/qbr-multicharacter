@@ -7,7 +7,6 @@ version '1.0.0'
 
 ui_page 'html/index.html'
 
-shared_script '@qb-core/import.lua'
 client_script 'client/main.lua'
 server_script 'server/main.lua'
 
@@ -20,6 +19,6 @@ files {
 }
 
 dependencies {
-    'qb-core',
-    'qb-spawn'
+    'qbr-core',
+    'qbr-spawn'
 }
