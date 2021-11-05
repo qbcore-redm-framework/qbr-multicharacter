@@ -7,24 +7,19 @@ version '1.0.0'
 
 ui_page 'html/index.html'
 
+shared_script '@qb-core/import.lua'
 client_script 'client/main.lua'
 server_script 'server/main.lua'
 
 files {
     'html/index.html',
-    'html/assets/css/style.css',
-    'html/assets/css/reset.css',
-    'html/assets/js/script.js',
-    'html/assets/img/logo/qbus-logo.png',
-    'html/assets/img/button.png',
-    'html/assets/img/button1.png',
-    'html/assets/img/characterQB2.png',
-    'html/assets/img/delete.png',
-    'html/assets/img/id.png',
-    'html/assets/img/registre2.png'
+    'html/style.css',
+    'html/reset.css',
+    'html/script.js',
+    'html/qbus-logo.png'
 }
 
 dependencies {
-    'qbr-core',
-    'qbr-spawn'
+    'qb-core',
+    'qb-spawn'
 }

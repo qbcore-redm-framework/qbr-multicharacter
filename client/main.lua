@@ -1,6 +1,9 @@
 local QBCore = exports['qbr-core']:GetCoreObject()
 local charPed = nil
 local choosingCharacter = false
+local currentSkin = nil
+local currentClothes = nil
+local selectingChar = true
 local cams = {
     {
         type = "customization",
@@ -24,11 +27,7 @@ local cams = {
     }
 }
 
--- Config = {
---     PedCoords = vector4(-558.9098, -3775.616, 238.59, 137.98),
---     HiddenCoords = vector4(-558.9098, -3775.616, 238.59, 137.98),
---     -- CamCoords = vector4(-814.02, 179.56, 76.74, 198.5),
--- }
+--- CODE
 
 Citizen.CreateThread(function()
     RequestImap(-1699673416)
@@ -39,56 +38,39 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 		if NetworkIsSessionStarted() then
 			TriggerEvent('qbr-multicharacter:client:chooseChar')
-            ShutdownLoadingScreen()
-            ShutdownLoadingScreenNui()
-            NetworkStartSoloTutorialSession()
-            print('Adding to tutorial session')
-            exports['qbr-weathersync']:disableSync()
 			return
 		end
 	end
 end)
-local currentSkin = nil
-local currentClothes = nil
-local selectingChar = true
+
 RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
     local cData = data.cData
     SetEntityAsMissionEntity(charPed, true, true)
     DeleteEntity(charPed)
 
-    if cData then
+    if cData ~= nil then
         QBCore.Functions.TriggerCallback('qbr-multicharacter:server:getSkin', function(data)
             model = data.model ~= nil and tonumber(data.model) or false
             currentSkin = data.skin
             currentClothes = data.clothes
-            if model then
-                CreateThread(function()
+            if model ~= nil then
+                Citizen.CreateThread(function()
+                    RequestModel(model)
                     while not HasModelLoaded(model) do
-                        RequestModel(model)
-                        Wait(0)
+                        Citizen.Wait(0)
                     end
                     charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
                     FreezeEntityPosition(charPed, false)
                     SetEntityInvincible(charPed, true)
                     SetBlockingOfNonTemporaryEvents(charPed, true)
-                    while not DoesEntityExist(charPed) do
-                        Wait(10)
-                    end
                     while not Citizen.InvokeNative(0xA0BC8FAED8CFEB3C, charPed) do
-                        Wait(5)
+                        Wait(1)
                     end
-                    Wait(100)
-                    -- This seems to happen only on the first login
-                    exports['qbr-clothing']:loadSkin(charPed, currentSkin, true)
-                    Wait(500)
-
-                    while not exports['qbr-clothing']:isPedUsingComponent(charPed) do
-                        Wait(500)
-                    end
+                    exports['qbr-clothing']:loadSkin(charPed, currentSkin, false)
                     exports['qbr-clothing']:loadClothes(charPed, currentClothes, false)
                 end)
             else
-                CreateThread(function()
+                Citizen.CreateThread(function()
                     local randommodels = {
                         "mp_male",
                         "mp_female",
@@ -99,18 +81,17 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
                     while not HasModelLoaded(model) do
                         Citizen.Wait(0)
                     end
-                    charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
                     Wait(100)
-                    exports['qbr-clothing']:doesThisFixWorks(charPed, sex)
+                    baseModel(randomModel)
+                    charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
                     FreezeEntityPosition(charPed, false)
                     SetEntityInvincible(charPed, true)
                     SetBlockingOfNonTemporaryEvents(charPed, true)
-                    NetworkSetEntityInvisibleToNetwork(charPed, true);
                 end)
             end
         end, cData.citizenid)
     else
-        CreateThread(function()
+        Citizen.CreateThread(function()
             local randommodels = {
                 "mp_male",
                 "mp_female",
@@ -123,39 +104,35 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
             end
             charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
             Wait(100)
-            local sex = IsPedMale(charPed) and 'Male' or 'Female'
-            exports['qbr-clothing']:doesThisFixWorks(charPed, sex)
+            baseModel(randomModel)
             FreezeEntityPosition(charPed, false)
             SetEntityInvincible(charPed, true)
-            NetworkSetEntityInvisibleToNetwork(charPed, true);
+            NetworkSetEntityInvisibleToNetwork(charPed, true)
             SetBlockingOfNonTemporaryEvents(charPed, true)
         end)
     end
 end)
 
-function tprint (tbl, indent)
-    if not indent then indent = 0 end
-    local toprint = string.rep(" ", indent) .. "{\r\n"
-    indent = indent + 2
-    for k, v in pairs(tbl) do
-        toprint = toprint .. string.rep(" ", indent)
-        if (type(k) == "number") then
-            toprint = toprint .. "[" .. k .. "] = "
-        elseif (type(k) == "string") then
-            toprint = toprint  .. k ..  "= "
-        end
-        if (type(v) == "number") then
-            toprint = toprint .. v .. ",\r\n"
-        elseif (type(v) == "string") then
-            toprint = toprint .. "\"" .. v .. "\",\r\n"
-        elseif (type(v) == "table") then
-            toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
-        else
-            toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
-        end
+function baseModel(sex)
+    if (sex == 'mp_male') then
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x158cb7f2, true, true, true); --head
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 361562633, true, true, true); --hair
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 62321923, true, true, true); --hand
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 3550965899, true, true, true); --legs
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 612262189, true, true, true); --Eye
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 319152566, true, true, true); -- 
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x2CD2CB71, true, true, true); -- shirt
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x151EAB71, true, true, true); -- bots
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x1A6D27DD, true, true, true); -- pants
+    else
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x1E6FDDFB, true, true, true); -- head
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 272798698, true, true, true); -- hair
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 869083847, true, true, true); -- Eye
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 736263364, true, true, true); -- hand
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x193FCEC4, true, true, true); -- shirt
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x285F3566, true, true, true); -- pants
+        Citizen.InvokeNative(0xD3A7B003ED343FD9, charPed, 0x134D7E03, true, true, true); -- bots
     end
-    toprint = toprint .. string.rep(" ", indent-2) .. "}"
-    return toprint
 end
 
 RegisterNUICallback('selectCharacter', function(data) -- When a char is selected and confirmed to use
@@ -163,7 +140,6 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
         selectingChar = false
         local cData = data.cData
         DoScreenFadeOut(10)
-        exports['qbr-weathersync']:enableSync()
         TriggerServerEvent('qbr-multicharacter:server:loadUserData', cData)
         giveUI(false)
         local model = IsPedMale(charPed) and 'mp_male' or 'mp_female'
@@ -173,10 +149,8 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
         exports['qbr-clothing']:RequestAndSetModel(model)
         Wait(200)
         exports['qbr-clothing']:loadSkin(PlayerPedId(), currentSkin, true)
-            Wait(500)
-        while not exports['qbr-clothing']:loadClothes(PlayerPedId(), currentClothes, false) do
-            Wait(500)
-        end
+        Wait(500)
+        exports['qbr-clothing']:loadClothes(PlayerPedId(), currentClothes, false)
         SetModelAsNoLongerNeeded(model)
     end)
 end)
@@ -205,6 +179,8 @@ RegisterNUICallback('createNewCharacter', function(data) -- Creating a char
     end
     createCharacter(data.gender)
 
+    DeleteEntity(charPed)
+    SetModelAsNoLongerNeeded(charPed)
     TriggerServerEvent('qbr-multicharacter:server:createCharacter', data)
     SetEntityCoords(PlayerPedId(), -558.71, -3781.6, 238.6 - 1.0)
     TriggerEvent('qbr-clothing:client:newPlayer')
@@ -224,7 +200,7 @@ function createCharacter(sex)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x10404a83, true, true, true); --mustache
         SetModelAsNoLongerNeeded(model)
     else
-        local model = 'mp_female'
+        local model = GetHashKey('mp_female')
         exports['qbr-clothing']:RequestAndSetModel(model)
         Wait(1000)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x11567c3, true, true, true); --head
@@ -234,8 +210,6 @@ function createCharacter(sex)
         SetModelAsNoLongerNeeded(model)
     end
     selectingChar = false
-    DeleteEntity(charPed)
-    SetModelAsNoLongerNeeded(charPed)
 end
 
 RegisterNUICallback('removeCharacter', function(data) -- Removing a char
@@ -289,6 +263,8 @@ end
 function skyCam(bool)
     if bool then
         DoScreenFadeIn(1000)
+        SetTimecycleModifier('hud_def_blur')
+        SetTimecycleModifierStrength(1.0)
         cam = CreateCam("DEFAULT_SCRIPTED_CAMERA")
         SetCamCoord(cam, -555.925,-3778.709,238.597)
         SetCamRot(cam, -20.0, 0.0, 83)
@@ -310,7 +286,6 @@ function skyCam(bool)
         FreezeEntityPosition(PlayerPedId(), false)
     end
 end
-
 
 AddEventHandler('onResourceStop', function(resource)
     if (GetCurrentResourceName() == resource) then

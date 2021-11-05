@@ -33,7 +33,7 @@ AddEventHandler('qbr-multicharacter:server:createCharacter', function(data, enab
         end]]
 
         TriggerClientEvent("qbr-multicharacter:client:closeNUI", src)
-        --TriggerClientEvent('qbr-spawn:client:setupSpawnUI', src, newData, true)
+        TriggerClientEvent('qbr-spawn:client:setupSpawnUI', src, newData, true)
         --GiveStarterItems(src)
 	end
 end)
@@ -44,23 +44,10 @@ AddEventHandler('qbr-multicharacter:server:deleteCharacter', function(citizenid)
     QBCore.Player.DeleteCharacter(src, citizenid)
 end)
 
-QBCore.Functions.CreateCallback('qbr-multicharacter:server:getSkin', function(source, cb, citizenid)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    local result = exports.oxmysql:executeSync('SELECT * FROM playerskins WHERE citizenid=@citizenid', {['@citizenid'] = citizenid})
-    if result[1] ~= nil then
-        local skin = json.decode(result[1].skin)
-        local model = json.decode(result[1].model)
-        local clothes = json.decode(result[1].clothes)
-        cb({model =  model, skin = skin, clothes = clothes})
-    end
-end)
-
-
 QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", function(source, cb)
     local license = QBCore.Functions.GetIdentifier(source, 'license')
     local plyChars = {}
-
+    
     exports.oxmysql:execute('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
         for i = 1, (#result), 1 do
             result[i].charinfo = json.decode(result[i].charinfo)
@@ -103,7 +90,7 @@ function loadHouseData()
                 owned = v.owned,
                 price = v.price,
                 locked = true,
-                adress = v.label,
+                adress = v.label, 
                 tier = v.tier,
                 garage = garage,
                 decorations = {},
