@@ -29,18 +29,18 @@ local cams = {
 
 --- CODE
 
-Citizen.CreateThread(function()
+CreateThread(function()
     RequestImap(-1699673416)
     RequestImap(1679934574)
     RequestImap(183712523)
 
-	while true do
-		Citizen.Wait(0)
-		if NetworkIsSessionStarted() then
-			TriggerEvent('qbr-multicharacter:client:chooseChar')
-			return
-		end
-	end
+    while true do
+        Wait(0)
+        if NetworkIsSessionStarted() then
+            TriggerEvent('qbr-multicharacter:client:chooseChar')
+            return
+        end
+    end
 end)
 
 RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
@@ -54,10 +54,10 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
             currentSkin = data.skin
             currentClothes = data.clothes
             if model ~= nil then
-                Citizen.CreateThread(function()
+                CreateThread(function()
                     RequestModel(model)
                     while not HasModelLoaded(model) do
-                        Citizen.Wait(0)
+                        Wait(0)
                     end
                     charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
                     FreezeEntityPosition(charPed, false)
@@ -70,7 +70,7 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
                     exports['qbr-clothing']:loadClothes(charPed, currentClothes, false)
                 end)
             else
-                Citizen.CreateThread(function()
+                CreateThread(function()
                     local randommodels = {
                         "mp_male",
                         "mp_female",
@@ -79,7 +79,7 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
                     local model = GetHashKey(randomModel)
                     RequestModel(model)
                     while not HasModelLoaded(model) do
-                        Citizen.Wait(0)
+                        Wait(0)
                     end
                     Wait(100)
                     baseModel(randomModel)
@@ -91,7 +91,7 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
             end
         end, cData.citizenid)
     else
-        Citizen.CreateThread(function()
+        CreateThread(function()
             local randommodels = {
                 "mp_male",
                 "mp_female",
@@ -100,7 +100,7 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
             local model = GetHashKey(randomModel)
             RequestModel(model)
             while not HasModelLoaded(model) do
-                Citizen.Wait(0)
+                Wait(0)
             end
             charPed = CreatePed(model, -558.91, -3776.25, 237.63, 90.0, false, false)
             Wait(100)
@@ -136,7 +136,7 @@ function baseModel(sex)
 end
 
 RegisterNUICallback('selectCharacter', function(data) -- When a char is selected and confirmed to use
-    Citizen.CreateThread(function()
+    CreateThread(function()
         selectingChar = false
         local cData = data.cData
         DoScreenFadeOut(10)
@@ -178,13 +178,10 @@ RegisterNUICallback('createNewCharacter', function(data) -- Creating a char
         data.gender = 1
     end
     createCharacter(data.gender)
-
     DeleteEntity(charPed)
     SetModelAsNoLongerNeeded(charPed)
     TriggerServerEvent('qbr-multicharacter:server:createCharacter', data)
-    SetEntityCoords(PlayerPedId(), -558.71, -3781.6, 238.6 - 1.0)
-    TriggerEvent('qbr-clothing:client:newPlayer')
-    Citizen.Wait(1000)
+    Wait(1000)
     DoScreenFadeIn(1000)
 end)
 
@@ -223,19 +220,18 @@ RegisterNUICallback('disconnectButton', function() -- Disconnect
     TriggerServerEvent('qbr-multicharacter:server:disconnect')
 end)
 
-RegisterNetEvent('qbr-multicharacter:client:chooseChar')
-AddEventHandler('qbr-multicharacter:client:chooseChar', function()
+RegisterNetEvent('qbr-multicharacter:client:chooseChar', function()
     SetEntityVisible(PlayerPedId(), false, false)
     SetNuiFocus(false, false)
     DoScreenFadeOut(10)
-    Citizen.Wait(1000)
+    Wait(1000)
     GetInteriorAtCoords(-558.9098, -3775.616, 238.59, 137.98)
     FreezeEntityPosition(PlayerPedId(), true)
     SetEntityCoords(PlayerPedId(), -562.91,-3776.25,237.63)
-    Citizen.Wait(1500)
+    Wait(1500)
     ShutdownLoadingScreen()
     ShutdownLoadingScreenNui()
-    Citizen.Wait(10)
+    Wait(10)
     giveUI(true)
     while selectingChar do
         Wait(1)
@@ -244,8 +240,7 @@ AddEventHandler('qbr-multicharacter:client:chooseChar', function()
     end
 end)
 
-RegisterNetEvent('qbr-multicharacter:client:closeNUI')
-AddEventHandler('qbr-multicharacter:client:closeNUI', function()
+RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     SetNuiFocus(false, false)
 end)
 
@@ -256,7 +251,7 @@ function giveUI(bool)
         toggle = bool,
     })
     choosingCharacter = bool
-    Citizen.Wait(100)
+    Wait(100)
     skyCam(bool)
 end
 
