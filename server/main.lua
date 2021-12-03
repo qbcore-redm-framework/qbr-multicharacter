@@ -47,7 +47,7 @@ end)
 QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", function(source, cb)
     local license = QBCore.Functions.GetIdentifier(source, 'license')
     local plyChars = {}
-    
+
     exports.oxmysql:execute('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
         for i = 1, (#result), 1 do
             result[i].charinfo = json.decode(result[i].charinfo)
@@ -57,6 +57,14 @@ QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", functi
             table.insert(plyChars, result[i])
         end
         cb(plyChars)
+    end)
+end)
+
+QBCore.Functions.CreateCallback("qbr-multicharacter:server:getSkin", function(source, cb, cid)
+    exports.oxmysql:execute('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
+        result[1].skin = json.decode(result[1].skin)
+        result[1].clothes = json.decode(result[1].clothes)
+        cb(result[1])
     end)
 end)
 

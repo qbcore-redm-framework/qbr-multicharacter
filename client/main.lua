@@ -50,9 +50,9 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
 
     if cData ~= nil then
         QBCore.Functions.TriggerCallback('qbr-multicharacter:server:getSkin', function(data)
-            model = data.model ~= nil and tonumber(data.model) or false
-            currentSkin = data.skin
-            currentClothes = data.clothes
+            model = data.model and tonumber(data.model) or false
+            currentSkin = data.skin or {}
+            currentClothes = data.clothes or {}
             if model ~= nil then
                 CreateThread(function()
                     RequestModel(model)
