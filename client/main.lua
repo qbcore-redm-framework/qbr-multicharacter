@@ -172,6 +172,7 @@ RegisterNUICallback('createNewCharacter', function(data) -- Creating a char
     DoScreenFadeOut(150)
     Wait(200)
     DestroyAllCams(true)
+
     if data.gender == "Male" then
         data.gender = 0
     elseif data.gender == "Female" then
@@ -195,15 +196,17 @@ function createCharacter(sex)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0xa615e02, true, true, true); --legs
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x105ddb4, true, true, true); --hair
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x10404a83, true, true, true); --mustache
+        -- Citizen.InvokeNative(0x77FF8D35EEC6BBC4, PlayerPedId(), 0, 0) -- set outfit preset, unsure if needed
         SetModelAsNoLongerNeeded(model)
     else
-        local model = GetHashKey('mp_female')
+        local model = 'mp_female'
         exports['qbr-clothing']:RequestAndSetModel(model)
         Wait(1000)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x11567c3, true, true, true); --head
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x2c4fe0c5, true, true, true); --torso
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0xaa25eca7, true, true, true); --legs
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x104293ea, true, true, true); --hair
+        -- Citizen.InvokeNative(0x77FF8D35EEC6BBC4, PlayerPedId(), 0, 0) -- set outfit preset, unsure if needed
         SetModelAsNoLongerNeeded(model)
     end
     selectingChar = false
