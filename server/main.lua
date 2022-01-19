@@ -48,7 +48,7 @@ QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", functi
     local license = QBCore.Functions.GetIdentifier(source, 'license')
     local plyChars = {}
 
-    exports.oxmysql:execute('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
+    MySQL.Async.fetchAll('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
         for i = 1, (#result), 1 do
             result[i].charinfo = json.decode(result[i].charinfo)
             result[i].money = json.decode(result[i].money)
@@ -61,7 +61,7 @@ QBCore.Functions.CreateCallback("qbr-multicharacter:server:loadUserInfo", functi
 end)
 
 QBCore.Functions.CreateCallback("qbr-multicharacter:server:getSkin", function(source, cb, cid)
-    exports.oxmysql:execute('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
+    MySQL.Async.fetchAll('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
         result[1].skin = json.decode(result[1].skin)
         result[1].clothes = json.decode(result[1].clothes)
         cb(result[1])
@@ -85,7 +85,7 @@ end
 function loadHouseData()
     local HouseGarages = {}
     local Houses = {}
-    local result = exports.oxmysql:executeSync('SELECT * FROM houselocations')
+    local result = MySQL.Sync.fetchAll('SELECT * FROM houselocations')
     if result[1] ~= nil then
         for k, v in pairs(result) do
             local owned = false
