@@ -2,12 +2,14 @@ var selectedChar = null;
 var WelcomePercentage = "30vh"
 qbMultiCharacters = {}
 var Loaded = false;
+var NChar = null;
 
 $(document).ready(function (){
     window.addEventListener('message', function (event) {
         var data = event.data;
 
         if (data.action == "ui") {
+			NChar = data.nChar;
             if (data.toggle) {
                 $('.container').show();
                 $(".welcomescreen").fadeIn(150);
@@ -38,8 +40,9 @@ $(document).ready(function (){
                         loadingDots = 0;
                     }
                 }, 500);
-            
+
                 setTimeout(function(){
+					setCharactersList()
                     $.post('https://qbr-multicharacter/setupCharacters');
                     setTimeout(function(){
                         clearInterval(DotsInterval);
@@ -71,14 +74,6 @@ $(document).ready(function (){
 
 $('.continue-btn').click(function(e){
     e.preventDefault();
-
-    // qbMultiCharacters.fadeOutUp('.welcomescreen', undefined, 400);
-    // qbMultiCharacters.fadeOutDown('.server-log', undefined, 400);
-    // setTimeout(function(){
-    //     qbMultiCharacters.fadeInDown('.characters-list', '20%', 400);
-    //     qbMultiCharacters.fadeInDown('.character-info', '20%', 400);
-    //     $.post('https://qbr-multicharacter/setupCharacters');
-    // }, 400)
 });
 
 $('.disconnect-btn').click(function(e){
@@ -102,6 +97,7 @@ function setupCharInfo(cData) {
         '<div class="character-info-box"><span id="info-label">Job: </span><span class="char-info-js">'+cData.job.label+'</span></div>' +
         '<div class="character-info-box"><span id="info-label">Cash: </span><span class="char-info-js">&#36; '+cData.money.cash+'</span></div>' +
         '<div class="character-info-box"><span id="info-label">Bank: </span><span class="char-info-js">&#36; '+cData.money.bank+'</span></div>' +
+        '<div class="character-info-box"><span id="info-label">Phone number: </span><span class="char-info-js">'+cData.charinfo.phone+'</span></div>' +
         '<div class="character-info-box"><span id="info-label">Account number: </span><span class="char-info-js">'+cData.charinfo.account+'</span></div>');
     }
 }
@@ -199,50 +195,41 @@ function hasWhiteSpace(s) {
   }
 $(document).on('click', '#create', function (e) {
     e.preventDefault();
-   
-        let firstname= escapeHtml($('#first_name').val())
-        let lastname= escapeHtml($('#last_name').val())
-        let nationality= escapeHtml($('#nationality').val())
-        let birthdate= escapeHtml($('#birthdate').val())
-        let gender= escapeHtml($('select[name=gender]').val())
-        let cid = escapeHtml($(selectedChar).attr('id').replace('char-', ''))
-        
+
+    let firstname= escapeHtml($('#first_name').val())
+    let lastname= escapeHtml($('#last_name').val())
+    let nationality= escapeHtml($('#nationality').val())
+    let birthdate= escapeHtml($('#birthdate').val())
+    let gender= escapeHtml($('select[name=gender]').val())
+    let cid = escapeHtml($(selectedChar).attr('id').replace('char-', ''))
+    const regTest = new RegExp(profList.join('|'), 'i');
     //An Ugly check of null objects
 
     if (!firstname || !lastname || !nationality || !birthdate || hasWhiteSpace(firstname) || hasWhiteSpace(lastname)|| hasWhiteSpace(nationality) ){
-    console.log("FIELDS REQUIRED")
-    }else{
-        $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
-            firstname: firstname,
-            lastname: lastname,
-            nationality: nationality,
-            birthdate: birthdate,
-            gender: gender,
-            cid: cid,
-        }));
-        $(".container").fadeOut(150);
-        $('.characters-list').css("filter", "none");
-        $('.character-info').css("filter", "none");
-        qbMultiCharacters.fadeOutDown('.character-register', '125%', 400);
-        refreshCharacters()
+        console.log("FIELDS REQUIRED")
+        return false;
     }
+
+    if(regTest.test(firstname) || regTest.test(lastname)){
+        console.log("ERROR: You used a derogatory/vulgar term. Please try again!")
+        return false;
+    }
+
+    $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
+        firstname: firstname,
+        lastname: lastname,
+        nationality: nationality,
+        birthdate: birthdate,
+        gender: gender,
+        cid: cid,
+    }));
+    $(".container").fadeOut(150);
+    $('.characters-list').css("filter", "none");
+    $('.character-info').css("filter", "none");
+    qbMultiCharacters.fadeOutDown('.character-register', '125%', 400);
+    refreshCharacters()
+
 });
-// $(document).on('click', '#create', function(e){
-//     e.preventDefault();
-//     $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
-//         firstname: $('#first_name').val(),
-//         lastname: $('#last_name').val(),
-//         nationality: $('#nationality').val(),
-//         birthdate: $('#birthdate').val(),
-//         gender: $('select[name=gender]').val(),
-//         cid: $(selectedChar).attr('id').replace('char-', ''),
-//     }));
-//     $(".container").fadeOut(150);
-//     $('.characters-list').css("filter", "none");
-//     $('.character-info').css("filter", "none");
-//     qbMultiCharacters.fadeOutDown('.character-register', '125%', 400);
-//     refreshCharacters()
-// });
 
 $(document).on('click', '#accept-delete', function(e){
     $.post('https://qbr-multicharacter/removeCharacter', JSON.stringify({
@@ -250,11 +237,33 @@ $(document).on('click', '#accept-delete', function(e){
     }));
     $('.character-delete').fadeOut(150);
     $('.characters-block').css("filter", "none");
-    refreshCharacters()
+    refreshCharacters();
 });
 
+$(document).on('click', '#cancel-delete', function(e){
+    e.preventDefault();
+    $('.characters-block').css("filter", "none");
+    $('.character-delete').fadeOut(150);
+});
+
+function setCharactersList() {
+    var htmlResult = '<div class="character-list-header"><p>My Characters</p></div>'
+    for (let i = 1; i <= NChar; i++) {
+        htmlResult += '<div class="character" id="char-'+ i +'" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div>'
+    }
+    htmlResult += '<div class="character-btn" id="play"><p id="play-text">Select a character</p></div><div class="character-btn" id="delete"><p id="delete-text">Select a character</p></div>'
+    $('.characters-list').html(htmlResult)
+}
+
 function refreshCharacters() {
-    $('.characters-list').html('<div class="character" id="char-1" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div><div class="character" id="char-2" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div><div class="character" id="char-3" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div><div class="character" id="char-4" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div><div class="character" id="char-5" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div><div class="character-btn" id="play"><p id="play-text">Select a character</p></div><div class="character-btn" id="delete"><p id="delete-text">Select a character</p></div>')
+    var htmlResult = ''
+    for (let i = 1; i <= NChar; i++) {
+        htmlResult += '<div class="character" id="char-'+ i +'" data-cid=""><span id="slot-name">Empty Slot<span id="cid"></span></span></div>'
+    }
+
+    htmlResult += '<div class="character-btn" id="play"><p id="play-text">Select a character</p></div><div class="character-btn" id="delete"><p id="delete-text">Select a character</p></div>'
+    $('.characters-list').html(htmlResult)
+
     setTimeout(function(){
         $(selectedChar).removeClass("char-selected");
         selectedChar = null;
@@ -287,8 +296,6 @@ $(document).on('click', '#play', function(e) {
             $.post('https://qbr-multicharacter/selectCharacter', JSON.stringify({
                 cData: $(selectedChar).data('cData')
             }));
-            // qbMultiCharacters.fadeInDown('.welcomescreen', WelcomePercentage, 400);
-            // qbMultiCharacters.fadeInDown('.server-log', '25%', 400);
             setTimeout(function(){
                 qbMultiCharacters.fadeOutDown('.characters-list', "-40%", 400);
                 qbMultiCharacters.fadeOutDown('.character-info', "-40%", 400);
@@ -341,7 +348,6 @@ qbMultiCharacters.resetAll = function() {
     $('.characters-list').css("top", "-40");
     $('.character-info').hide();
     $('.character-info').css("top", "-40");
-    // $('.welcomescreen').show();
     $('.welcomescreen').css("top", WelcomePercentage);
     $('.server-log').show();
     $('.server-log').css("top", "25%");
