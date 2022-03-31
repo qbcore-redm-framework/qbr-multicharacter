@@ -1,9 +1,13 @@
 -- Functions
 
+local StarterItems = {
+    ['apple'] = { amount = 1, item = 'apple' }
+}
+
+
 local function GiveStarterItems(source)
     local Player = exports['qbr-core']:GetPlayer(source)
-    local items = exports['qbr-core']:GetItems()
-    for k, v in pairs(items) do
+    for k, v in pairs(StarterItems) do
         Player.Functions.AddItem(v.item, 1)
     end
 end
