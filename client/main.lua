@@ -150,6 +150,12 @@ end
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     DeleteEntity(charPed)
     SetNuiFocus(false, false)
+    DoScreenFadeOut(1000)
+    Citizen.InvokeNative(0xF1622CE88A1946FB)
+    Citizen.InvokeNative(0x8BC7C1F929D07BF3 ,GetHashKey("HUD_CTX_IN_FAST_TRAVEL_MENU")) -- revert award messages
+    Wait(1000) -- wait i guess
+    print('ItHappend')
+    DoScreenFadeIn(1000)
 end)
 
 RegisterNetEvent('qbr-multicharacter:client:chooseChar', function()
@@ -271,6 +277,7 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
         Wait(500)
         exports['qbr-clothing']:loadClothes(PlayerPedId(), currentClothes, false)
         SetModelAsNoLongerNeeded(model)
+        
     end)
 end)
 
@@ -320,6 +327,7 @@ CreateThread(function()
     while true do
         Wait(0)
         if NetworkIsSessionStarted() then
+            Citizen.InvokeNative(0x4CC5F2FC1332577F ,GetHashKey("HUD_CTX_IN_FAST_TRAVEL_MENU"))-- disable award messages temp
             TriggerEvent('qbr-multicharacter:client:chooseChar')
             return
         end
