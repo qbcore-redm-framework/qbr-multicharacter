@@ -3,6 +3,9 @@ local choosingCharacter = false
 local currentSkin = nil
 local currentClothes = nil
 local selectingChar = true
+
+local isChossing = false
+
 local cams = {
     {
         type = "customization",
@@ -150,12 +153,7 @@ end
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     DeleteEntity(charPed)
     SetNuiFocus(false, false)
-    DoScreenFadeOut(1000)
-    Citizen.InvokeNative(0xF1622CE88A1946FB)
-    Citizen.InvokeNative(0x8BC7C1F929D07BF3 ,GetHashKey("HUD_CTX_IN_FAST_TRAVEL_MENU")) -- revert award messages
-    Wait(1000) -- wait i guess until the above is done (Fade outs mute soundfx's so we activate it there so it hides/mutes)
-    -- probably a better way to mute/hide that promt but iv tried and that seems to work alright
-    DoScreenFadeIn(1000)
+    isChossing = false
 end)
 
 RegisterNetEvent('qbr-multicharacter:client:chooseChar', function()
@@ -327,8 +325,14 @@ CreateThread(function()
     while true do
         Wait(0)
         if NetworkIsSessionStarted() then
-            Citizen.InvokeNative(0x4CC5F2FC1332577F ,GetHashKey("HUD_CTX_IN_FAST_TRAVEL_MENU"))-- disable award messages temp
             TriggerEvent('qbr-multicharacter:client:chooseChar')
+            isChossing = true
+            Citizen.CreateThread(function()
+                while isChossing do
+                    Wait(0)
+                    Citizen.InvokeNative(0xF1622CE88A1946FB)
+                end
+            end)
             return
         end
     end
