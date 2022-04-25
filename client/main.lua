@@ -153,8 +153,8 @@ RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     DoScreenFadeOut(1000)
     Citizen.InvokeNative(0xF1622CE88A1946FB)
     Citizen.InvokeNative(0x8BC7C1F929D07BF3 ,GetHashKey("HUD_CTX_IN_FAST_TRAVEL_MENU")) -- revert award messages
-    Wait(1000) -- wait i guess
-    print('ItHappend')
+    Wait(1000) -- wait i guess until the above is done (Fade outs mute soundfx's so we activate it there so it hides/mutes)
+    -- probably a better way to mute/hide that promt but iv tried and that seems to work alright
     DoScreenFadeIn(1000)
 end)
 
