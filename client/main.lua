@@ -301,6 +301,7 @@ RegisterNUICallback('createNewCharacter', function(data) -- Creating a char
     DeleteEntity(charPed)
     SetModelAsNoLongerNeeded(charPed)
     TriggerServerEvent('qbr-multicharacter:server:createCharacter', data)
+    TriggerEvent('qbr-spawn:setFirstTime') -- simple true/false toggle :P
     Wait(1000)
     DoScreenFadeIn(1000)
 end)
