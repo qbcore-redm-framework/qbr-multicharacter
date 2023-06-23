@@ -12,39 +12,8 @@ local function GiveStarterItems(source)
     end
 end
 
-local function loadHouseData()
-    local HouseGarages = {}
-    local Houses = {}
-    local result = MySQL.query.await('SELECT * FROM houselocations')
-    if result[1] ~= nil then
-        for k, v in pairs(result) do
-            local owned = false
-            if tonumber(v.owned) == 1 then
-                owned = true
-            end
-            local garage = v.garage ~= nil and json.decode(v.garage) or {}
-            Houses[v.name] = {
-                coords = json.decode(v.coords),
-                owned = v.owned,
-                price = v.price,
-                locked = true,
-                adress = v.label,
-                tier = v.tier,
-                garage = garage,
-                decorations = {},
-            }
-            HouseGarages[v.name] = {
-                label = v.label,
-                takeVehicle = garage,
-            }
-        end
-    end
-    TriggerClientEvent("qbr-garages:client:houseGarageConfig", -1, HouseGarages)
-    TriggerClientEvent("qbr-houses:client:setHouseConfig", -1, Houses)
-end
-
 RegisterNetEvent('qbr-multicharacter:server:disconnect', function(source)
-    DropPlayer(source, "You have disconnected from QBCore RedM")
+    DropPlayer(source, "You have disconnected from QBRCore RedM")
 end)
 
 RegisterNetEvent('qbr-multicharacter:server:loadUserData', function(cData)
@@ -58,7 +27,7 @@ RegisterNetEvent('qbr-multicharacter:server:loadUserData', function(cData)
 	end
 end)
 
-RegisterNetEvent('qbr-multicharacter:server:createCharacter', function(data, enabledhouses)
+RegisterNetEvent('qbr-multicharacter:server:createCharacter', function(data)
     local newData = {}
     local src = source
     newData.cid = data.cid
@@ -66,7 +35,6 @@ RegisterNetEvent('qbr-multicharacter:server:createCharacter', function(data, ena
     if exports['qbr-core']:Login(src, false, newData) then
         exports['qbr-core']:ShowSuccess(GetCurrentResourceName(), GetPlayerName(src)..' has succesfully loaded!')
         exports['qbr-core']:RefreshCommands(src)
-        --[[if enabledhouses then loadHouseData() end]] -- Enable once housing is ready
         TriggerClientEvent("qbr-multicharacter:client:closeNUI", src)
         TriggerClientEvent('qbr-spawn:client:setupSpawnUI', src, newData, true)
         GiveStarterItems(src)
@@ -82,7 +50,7 @@ end)
 exports['qbr-core']:CreateCallback("qb-multicharacter:server:setupCharacters", function(source, cb)
     local license = exports['qbr-core']:GetIdentifier(source, 'license')
     local plyChars = {}
-    MySQL.query('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
+    MySQL.Async.fetchAll('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
         for i = 1, (#result), 1 do
             result[i].charinfo = json.decode(result[i].charinfo)
             result[i].money = json.decode(result[i].money)
@@ -112,7 +80,7 @@ exports['qbr-core']:CreateCallback("qb-multicharacter:server:GetNumberOfCharacte
 end)
 
 exports['qbr-core']:CreateCallback("qbr-multicharacter:server:getSkin", function(source, cb, cid)
-    MySQL.query('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
+    MySQL.Async.fetchAll('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
         result[1].skin = json.decode(result[1].skin)
         result[1].clothes = json.decode(result[1].clothes)
         cb(result[1])
