@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 .container {
     display: none;
 }
@@ -28,7 +26,7 @@ body {
     text-align: center;
     color: #ededed;
     line-height: 24px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
 }
 
 .characters-list {
@@ -54,7 +52,7 @@ body {
     text-align: center;
     font-size: 2vh;
     margin-top: 3.1vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     letter-spacing: .1vh;
     font-weight: 900;
     color: #ededed;
@@ -72,16 +70,16 @@ body {
     position: relative;
     width: 100%;
     height: 210px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     border-bottom: 4px solid #33333300;
     transition: .1s linear;
-    cursor: pointer;
+    cursor: poMonospace;
     margin-right: 50px;
     background-image: url('https://imagedelivery.net/3ecvmLCFkS-FijMWb0qFvQ/9449fbdb-cc28-4787-f7ee-22c3be336000/public');
 }
 
 .character:hover {
-    background-image: url('https://imagedelivery.net/3ecvmLCFkS-FijMWb0qFvQ/9449fbdb-cc28-4787-f7ee-22c3be336000/public');
+    background-color: rgba(0, 0, 0, 0.74);
     width: 105%;
     border-bottom: 2px solid white;
 }
@@ -91,7 +89,7 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: .1vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
 }
 
 .user {
@@ -106,7 +104,7 @@ body {
     color: #ededed;
     position: relative;
     float: right;
-    font-size: 1.5vh;
+    font-size: 1.1vh;
     right: 35px;
 }
 
@@ -122,10 +120,10 @@ body {
 #slot-name {
     position: relative;
     color: #ededed;
-    font-size: 17px;
+    font-size: 12px;
     line-height: 350px;
     left: 20px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
 }
 
 .btns {
@@ -133,7 +131,7 @@ body {
     width: auto;
     bottom: 22.5%;
     position: absolute;
-    background-image: url('https://imagedelivery.net/3ecvmLCFkS-FijMWb0qFvQ/9449fbdb-cc28-4787-f7ee-22c3be336000/public');
+    background-color: rgba(0, 0, 0, 0.74);
     padding: 9px 29px;
     border-radius: 5px;
     right: 21.5vh;
@@ -147,7 +145,7 @@ body {
     transition: 0.2s;
     float: left;
     margin-top: 2px;
-    cursor: pointer;
+    cursor: poMonospace;
     overflow: visible !important;
     margin-bottom: 2px;
     margin-left: 2px;
@@ -155,9 +153,9 @@ body {
 }
 
 .character-btn>p {
-    color: #222222;
+    color: #000000a3;
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     font-size: 2.5vh;
     text-transform: uppercase;
     line-height: 5.5vh;
@@ -204,7 +202,7 @@ body {
     width: 28%;
     height: 45%;
     top: 10%;
-    background-image: url('https://cdn.discordapp.com/attachments/1021700112776437760/1098617150803038330/public.png');
+    background-color: rgba(0, 0, 0, 0.74);
     overflow: visible !important;
     left: 9.5%;
 }
@@ -234,6 +232,7 @@ body {
     font-size: 16px;
     top: 30%;
     text-align: center;
+    font-family: 'Monospace', Serif;
 }
 
 .char-info-titel {
@@ -282,9 +281,9 @@ body {
     right: 12%;
     background-color: #222222;
     padding: 18px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     color: #ededed;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
     border-radius: 5px;
 }
@@ -297,14 +296,14 @@ body {
     text-align: left;
     font-size: 2vh;
     line-height: 29px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     font-weight: 900;
     text-transform: uppercase;
     overflow: visible !important;
 }
 
 .characters-delete-block-header>p {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
 }
 
@@ -326,10 +325,10 @@ body {
     background-color: rgba(23, 23, 23, 1);
     border-radius: .8vh;
     padding: 30px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     color: #ededed;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
 }
 
@@ -343,7 +342,7 @@ body {
     font-size: 18px;
     line-height: 29px;
     vertical-align: middle;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     font-weight: 900;
     text-transform: uppercase;
     overflow: visible !important;
@@ -359,7 +358,7 @@ body {
 }
 
 .error-msg {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
     padding: 8px;
 }
@@ -379,7 +378,7 @@ body {
     border-radius: 4px;
     transition: 0.2s;
     overflow: visible !important;
-    cursor: pointer;
+    cursor: poMonospace;
 }
 
 .character-canceldel-btn {
@@ -393,7 +392,7 @@ body {
     border-radius: 4px;
     transition: 0.2s;
     overflow: visible !important;
-    cursor: pointer;
+    cursor: poMonospace;
 }
 
 .close-err-btn {
@@ -407,14 +406,14 @@ body {
     border-radius: 4px;
     transition: 0.2s;
     overflow: visible !important;
-    cursor: pointer;
+    cursor: poMonospace;
 }
 
 .character-acceptdel-btn>p {
     color: #202731;
     text-align: center;
     padding-top: 1vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
     font-weight: 900;
     text-transform: uppercase;
@@ -424,7 +423,7 @@ body {
     color: #202731;
     text-align: center;
     padding-top: 1vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     overflow: visible !important;
     font-weight: 900;
     text-transform: uppercase;
@@ -441,7 +440,7 @@ body {
     left: 395px;
     background-image: url('https://cdn.discordapp.com/attachments/1021700112776437760/1098617150803038330/public.png');
     padding: 30px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     box-shadow: 0 0px 1px 0 #7b7b7b;
 }
 
@@ -451,7 +450,7 @@ body {
     float: right;
     font-size: 1.5vh;
     right: 6vh;
-    cursor: pointer;
+    cursor: poMonospace;
     background-color: #680000;
     color: #1b1e23;
     padding: 5px;
@@ -501,7 +500,7 @@ body {
     font-weight: 900;
     padding: 4px;
     border-radius: .3vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     text-align: center;
     transition: all 0.2s ease-in-out;
     cursor: text;
@@ -522,14 +521,14 @@ select {
     padding: 4px;
     border-radius: .3vh;
     font-size: 18px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     text-align-last: center;
     -webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 1px;
     text-overflow: '';
     transition: all 0.2s ease-in-out;
-    cursor: pointer;
+    cursor: poMonospace;
     text-align: center;
     margin: 0 auto;
     text-align-last: center
@@ -608,7 +607,7 @@ input[type="date"]::-webkit-clear-button {
 #birthdate {
     color: #333943;
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
 }
 
 .character-reg-btn {
@@ -621,7 +620,7 @@ input[type="date"]::-webkit-clear-button {
     margin: 0 auto;
     left: 0;
     right: 0;
-    cursor: pointer;
+    cursor: poMonospace;
 }
 
 .character-reg-btn>p {
@@ -629,7 +628,7 @@ input[type="date"]::-webkit-clear-button {
     line-height: 4vh;
     color: #202731;
     text-transform: uppercase;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     font-size: 2vh;
     font-weight: 900;
 }
@@ -650,7 +649,7 @@ input[type="date"]::-webkit-clear-button {
 .loading-rondje > p {
     color: white;
     margin-top: 1vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Monospace', Serif;
     text-shadow: 1px 1px 0px #00000085;
 }
 
