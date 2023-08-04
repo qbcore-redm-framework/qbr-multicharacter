@@ -3,6 +3,9 @@ local choosingCharacter = false
 local currentSkin = nil
 local currentClothes = nil
 local selectingChar = true
+
+local isChossing = false
+
 local cams = {
     {
         type = "customization",
@@ -150,6 +153,7 @@ end
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     DeleteEntity(charPed)
     SetNuiFocus(false, false)
+    isChossing = false
 end)
 
 RegisterNetEvent('qbr-multicharacter:client:chooseChar', function()
@@ -271,6 +275,7 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
         Wait(500)
         exports['qbr-clothing']:loadClothes(PlayerPedId(), currentClothes, false)
         SetModelAsNoLongerNeeded(model)
+        
     end)
 end)
 
@@ -301,6 +306,7 @@ RegisterNUICallback('createNewCharacter', function(data) -- Creating a char
     DeleteEntity(charPed)
     SetModelAsNoLongerNeeded(charPed)
     TriggerServerEvent('qbr-multicharacter:server:createCharacter', data)
+    TriggerEvent('qbr-spawn:setFirstTime') -- simple true/false toggle :P
     Wait(1000)
     DoScreenFadeIn(1000)
 end)
@@ -320,6 +326,13 @@ CreateThread(function()
         Wait(0)
         if NetworkIsSessionStarted() then
             TriggerEvent('qbr-multicharacter:client:chooseChar')
+            isChossing = true
+            Citizen.CreateThread(function()
+                while isChossing do
+                    Wait(0)
+                    Citizen.InvokeNative(0xF1622CE88A1946FB)
+                end
+            end)
             return
         end
     end
