@@ -3,6 +3,7 @@ var WelcomePercentage = "30vh"
 qbMultiCharacters = {}
 var Loaded = false;
 var NChar = null;
+const profPatterns = [];
 
 $(document).ready(function (){
     window.addEventListener('message', function (event) {
@@ -40,6 +41,13 @@ $(document).ready(function (){
                         loadingDots = 0;
                     }
                 }, 500);
+
+                for (let i = 0; i < profList.length; i++) {
+                    const word = profList[i];
+                    const pattern = word.replace(/[a-zA-Z]/g, letterToPattern);
+                    profPatterns.push(pattern);
+                }
+
 
                 setTimeout(function(){
 					setCharactersList()
@@ -185,6 +193,9 @@ var entityMap = {
     '=': '&#x3D;'
 };
 
+function letterToPattern(c) {
+    return `[${c.toLowerCase()}${c.toUpperCase()}]`;
+}
 function escapeHtml(string) {
     return String(string).replace(/[&<>"'=/]/g, function (s) {
         return entityMap[s];
@@ -203,17 +214,26 @@ $(document).on('click', '#create', function (e) {
     let gender= escapeHtml($('select[name=gender]').val())
     let cid = escapeHtml($(selectedChar).attr('id').replace('char-', ''))
     const regTest = new RegExp(profList.join('|'), 'i');
+
+
     //An Ugly check of null objects
+
 
     if (!firstname || !lastname || !nationality || !birthdate || hasWhiteSpace(firstname) || hasWhiteSpace(lastname)|| hasWhiteSpace(nationality) ){
         console.log("FIELDS REQUIRED")
         return false;
     }
 
-    if(regTest.test(firstname) || regTest.test(lastname)){
-        console.log("ERROR: You used a derogatory/vulgar term. Please try again!")
-        return false;
+    const profanityInfo = [firstname, lastname]
+    for (let i = 0; i < profanityInfo.length; i++) {
+        const profanityTerm = profCheck(profanityInfo[i]);
+        if (profanityTerm)
+        {
+           console.log(`ERROR: You used a derogatory/vulgar term "${profanityTerm}". Please try again!`);
+        }
     }
+
+
 
     $.post('https://qbr-multicharacter/createNewCharacter', JSON.stringify({
         firstname: firstname,
@@ -246,6 +266,10 @@ $(document).on('click', '#cancel-delete', function(e){
     $('.character-delete').fadeOut(150);
 });
 
+
+
+
+
 function setCharactersList() {
     var htmlResult = '<div class="character-list-header"><p>My Characters</p></div>'
     for (let i = 1; i <= NChar; i++) {
@@ -272,6 +296,19 @@ function refreshCharacters() {
         $("#play").css({"display":"none"});
         qbMultiCharacters.resetAll();
     }, 100)
+}
+
+function profCheck(name)
+{
+    for (let i = 0; i < profPatterns.length; i++) {
+        const profanityTerm = profPatterns[i];
+        const pattern = new RegExp(`\\b${profPatterns[i]}\\b`, 'gi');
+        if (name.match(pattern)) {
+            return profanityTerm
+        }
+
+    }
+    return false
 }
 
 $("#close-reg").click(function (e) {
