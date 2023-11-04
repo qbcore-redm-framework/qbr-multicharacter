@@ -116,7 +116,7 @@ local function skyCam(bool)
 end
 
 local function openCharMenu(bool)
-    exports['qbr-core']:TriggerCallback("qb-multicharacter:server:GetNumberOfCharacters", function(result)
+    exports['qbr-core']:TriggerCallback("qbr-multicharacter:server:GetNumberOfCharacters", function(result)
         SetNuiFocus(bool, bool)
         SendNUIMessage({
             action = "ui",
@@ -185,7 +185,7 @@ end)
 RegisterNUICallback('disconnectButton', function()
     SetEntityAsMissionEntity(charPed, true, true)
     DeleteEntity(charPed)
-    TriggerServerEvent('qb-multicharacter:server:disconnect')
+    TriggerServerEvent('qbr-multicharacter:server:disconnect')
 end)
 
 RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
@@ -280,7 +280,7 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
 end)
 
 RegisterNUICallback('setupCharacters', function() -- Present char info
-    exports['qbr-core']:TriggerCallback("qb-multicharacter:server:setupCharacters", function(result)
+    exports['qbr-core']:TriggerCallback("qbr-multicharacter:server:setupCharacters", function(result)
         SendNUIMessage({
             action = "setupCharacters",
             characters = result

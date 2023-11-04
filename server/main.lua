@@ -79,7 +79,7 @@ end)
 
 -- Callbacks
 
-exports['qbr-core']:CreateCallback("qb-multicharacter:server:setupCharacters", function(source, cb)
+exports['qbr-core']:CreateCallback("qbr-multicharacter:server:setupCharacters", function(source, cb)
     local license = exports['qbr-core']:GetIdentifier(source, 'license')
     local plyChars = {}
     MySQL.query('SELECT * FROM players WHERE license = @license', {['@license'] = license}, function(result)
@@ -93,7 +93,7 @@ exports['qbr-core']:CreateCallback("qb-multicharacter:server:setupCharacters", f
     end)
 end)
 
-exports['qbr-core']:CreateCallback("qb-multicharacter:server:GetNumberOfCharacters", function(source, cb)
+exports['qbr-core']:CreateCallback("qbr-multicharacter:server:GetNumberOfCharacters", function(source, cb)
     local license = exports['qbr-core']:GetIdentifier(source, 'license')
     local numOfChars = 0
     if next(Config.PlayersNumberOfCharacters) then
@@ -127,5 +127,5 @@ exports['qbr-core']:AddCommand("logout", "Logout of Character (Admin Only)", {},
 end, 'admin')
 
 exports['qbr-core']:AddCommand("closeNUI", "Close Multi NUI", {}, false, function(source)
-    TriggerClientEvent('qb-multicharacter:client:closeNUI', source)
+    TriggerClientEvent('qbr-multicharacter:client:closeNUI', source)
 end, 'user')
