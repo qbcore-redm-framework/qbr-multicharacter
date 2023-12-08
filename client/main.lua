@@ -116,7 +116,7 @@ local function skyCam(bool)
 end
 
 local function openCharMenu(bool)
-    exports['qbr-core']:TriggerCallback("qb-multicharacter:server:GetNumberOfCharacters", function(result)
+    exports['qbr-core']:TriggerCallback("qbr-multicharacter:server:GetNumberOfCharacters", function(result)
         SetNuiFocus(bool, bool)
         SendNUIMessage({
             action = "ui",
@@ -131,7 +131,7 @@ end
 
 -- Events
 
--- RegisterNetEvent('qb-multicharacter:client:closeNUIdefault', function() -- This event is only for no starting apartments
+-- RegisterNetEvent('qbr-multicharacter:client:closeNUIdefault', function() -- This event is only for no starting apartments
 --     DeleteEntity(charPed)
 --     SetNuiFocus(false, false)
 --     DoScreenFadeOut(500)
@@ -139,15 +139,15 @@ end
 --     SetEntityCoords(PlayerPedId(), Config.DefaultSpawn.x, Config.DefaultSpawn.y, Config.DefaultSpawn.z)
 --     TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
 --     TriggerEvent('QBCore:Client:OnPlayerLoaded')
---     TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
---     TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
+--     TriggerServerEvent('qbr-houses:server:SetInsideMeta', 0, false)
+--     TriggerServerEvent('qbr-apartments:server:SetInsideMeta', 0, 0, false)
 --     Wait(500)
 --     openCharMenu()
 --     SetEntityVisible(PlayerPedId(), true)
 --     Wait(500)
 --     DoScreenFadeIn(250)
---     TriggerEvent('qb-weathersync:client:EnableSync')
---     TriggerEvent('qb-clothes:client:CreateFirstCharacter')
+--     TriggerEvent('qbr-weathersync:client:EnableSync')
+--     TriggerEvent('qbr-clothes:client:CreateFirstCharacter')
 -- end)
 
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
@@ -185,7 +185,7 @@ end)
 RegisterNUICallback('disconnectButton', function()
     SetEntityAsMissionEntity(charPed, true, true)
     DeleteEntity(charPed)
-    TriggerServerEvent('qb-multicharacter:server:disconnect')
+    TriggerServerEvent('qbr-multicharacter:server:disconnect')
 end)
 
 RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
@@ -280,7 +280,7 @@ RegisterNUICallback('selectCharacter', function(data) -- When a char is selected
 end)
 
 RegisterNUICallback('setupCharacters', function() -- Present char info
-    exports['qbr-core']:TriggerCallback("qb-multicharacter:server:setupCharacters", function(result)
+    exports['qbr-core']:TriggerCallback("qbr-multicharacter:server:setupCharacters", function(result)
         SendNUIMessage({
             action = "setupCharacters",
             characters = result
