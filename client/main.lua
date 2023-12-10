@@ -72,7 +72,6 @@ local function createCharacter(sex)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0xa615e02, true, true, true); --legs
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x105ddb4, true, true, true); --hair
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x10404a83, true, true, true); --mustache
-        -- Citizen.InvokeNative(0x77FF8D35EEC6BBC4, PlayerPedId(), 0, 0) -- set outfit preset, unsure if needed
         SetModelAsNoLongerNeeded(model)
     else
         local model = 'mp_female'
@@ -82,7 +81,6 @@ local function createCharacter(sex)
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x2c4fe0c5, true, true, true); --torso
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0xaa25eca7, true, true, true); --legs
         Citizen.InvokeNative(0xD3A7B003ED343FD9, PlayerPedId(), 0x104293ea, true, true, true); --hair
-        -- Citizen.InvokeNative(0x77FF8D35EEC6BBC4, PlayerPedId(), 0, 0) -- set outfit preset, unsure if needed
         SetModelAsNoLongerNeeded(model)
     end
     selectingChar = false
@@ -130,25 +128,6 @@ local function openCharMenu(bool)
 end
 
 -- Events
-
--- RegisterNetEvent('qb-multicharacter:client:closeNUIdefault', function() -- This event is only for no starting apartments
---     DeleteEntity(charPed)
---     SetNuiFocus(false, false)
---     DoScreenFadeOut(500)
---     Wait(2000)
---     SetEntityCoords(PlayerPedId(), Config.DefaultSpawn.x, Config.DefaultSpawn.y, Config.DefaultSpawn.z)
---     TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
---     TriggerEvent('QBCore:Client:OnPlayerLoaded')
---     TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
---     TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
---     Wait(500)
---     openCharMenu()
---     SetEntityVisible(PlayerPedId(), true)
---     Wait(500)
---     DoScreenFadeIn(250)
---     TriggerEvent('qb-weathersync:client:EnableSync')
---     TriggerEvent('qb-clothes:client:CreateFirstCharacter')
--- end)
 
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
     DeleteEntity(charPed)
