@@ -131,7 +131,7 @@ end
 
 -- Events
 
--- RegisterNetEvent('qbr-multicharacter:client:closeNUIdefault', function() -- This event is only for no starting apartments
+-- RegisterNetEvent('qb-multicharacter:client:closeNUIdefault', function() -- This event is only for no starting apartments
 --     DeleteEntity(charPed)
 --     SetNuiFocus(false, false)
 --     DoScreenFadeOut(500)
@@ -139,15 +139,15 @@ end
 --     SetEntityCoords(PlayerPedId(), Config.DefaultSpawn.x, Config.DefaultSpawn.y, Config.DefaultSpawn.z)
 --     TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
 --     TriggerEvent('QBCore:Client:OnPlayerLoaded')
---     TriggerServerEvent('qbr-houses:server:SetInsideMeta', 0, false)
---     TriggerServerEvent('qbr-apartments:server:SetInsideMeta', 0, 0, false)
+--     TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
+--     TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
 --     Wait(500)
 --     openCharMenu()
 --     SetEntityVisible(PlayerPedId(), true)
 --     Wait(500)
 --     DoScreenFadeIn(250)
---     TriggerEvent('qbr-weathersync:client:EnableSync')
---     TriggerEvent('qbr-clothes:client:CreateFirstCharacter')
+--     TriggerEvent('qb-weathersync:client:EnableSync')
+--     TriggerEvent('qb-clothes:client:CreateFirstCharacter')
 -- end)
 
 RegisterNetEvent('qbr-multicharacter:client:closeNUI', function()
@@ -195,9 +195,9 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
 
     if cData ~= nil then
         exports['qbr-core']:TriggerCallback('qbr-multicharacter:server:getSkin', function(data)
-            model = data.model and tonumber(data.model) or false
-            currentSkin = data.skin or {}
-            currentClothes = data.clothes or {}
+            model = data?.model and tonumber(data.model) or nil
+            currentSkin = data?.skin and data.skin or nil
+            currentClothes = data?.clothes and data.clothes or nil             
             if model ~= nil then
                 CreateThread(function()
                     RequestModel(model)
@@ -257,6 +257,7 @@ RegisterNUICallback('cDataPed', function(data) -- Visually seeing the char
         end)
     end
 end)
+
 
 RegisterNUICallback('selectCharacter', function(data) -- When a char is selected and confirmed to use
     CreateThread(function()
