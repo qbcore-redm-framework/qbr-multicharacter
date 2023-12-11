@@ -1,7 +1,9 @@
 -- Functions
 
 local StarterItems = {
-    ['apple'] = { amount = 1, item = 'apple' }
+    ['apple'] = { amount = 5, item = 'apple' },
+    ['water'] = { amount = 5, item = 'water' }
+
 }
 
 
@@ -113,9 +115,13 @@ end)
 
 exports['qbr-core']:CreateCallback("qbr-multicharacter:server:getSkin", function(source, cb, cid)
     MySQL.query('SELECT * FROM playerskins WHERE citizenid = ? AND active = ?', {cid, 1}, function(result)
-        result[1].skin = json.decode(result[1].skin)
-        result[1].clothes = json.decode(result[1].clothes)
-        cb(result[1])
+        if result[1] ~= nil then
+            result[1].skin = json.decode(result[1].skin)
+            result[1].clothes = json.decode(result[1].clothes)
+            cb(result[1])
+        else
+            cb(false)
+        end
     end)
 end)
 
